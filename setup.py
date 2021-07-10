@@ -24,7 +24,9 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Baldanos/rd6006",
-    packages=setuptools.find_packages(),
+    #packages=setuptools.find_packages(),
+    package_dir={'': 'rd6006'},
+    packages=[''],
     install_requires=['pyserial', 'minimalmodbus'],
     classifiers=[
         "Programming Language :: Python :: 3",
