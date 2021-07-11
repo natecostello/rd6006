@@ -20,7 +20,7 @@ $ python setup.py install --user
 ```
 or
 ```
-$ %python3 -m pip install git+https://github.com/natecostello/rd6006.git
+$ python3 -m pip install git+https://github.com/natecostello/rd6006.git
 ```
 
 ## Usage
