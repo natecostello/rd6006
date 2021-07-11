@@ -6,6 +6,7 @@ minimalmodbus.TIMEOUT = 0.5
 
 class RD6006:
     def __init__(self, port, address=1, baudrate=115200):
+        self._lock = threading.Lock()
         self.port = port
         self.address = address
         self.instrument = minimalmodbus.Instrument(port=port, slaveaddress=address)
@@ -24,8 +25,6 @@ class RD6006:
             self.voltres = 100
             self.ampres = 1000
         
-        self._lock = threading.Lock()
-
     def __repr__(self):
         return f"RD6006 SN:{self.sn} FW:{self.fw}"
 
