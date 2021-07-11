@@ -1,4 +1,5 @@
 import minimalmodbus
+import threading
 
 minimalmodbus.TIMEOUT = 0.5
 
@@ -22,29 +23,34 @@ class RD6006:
             print("RD6006 or other detected")
             self.voltres = 100
             self.ampres = 1000
+        
+        self._lock = threading.Lock()
 
     def __repr__(self):
         return f"RD6006 SN:{self.sn} FW:{self.fw}"
 
     def _read_register(self, register):
-        try:
-            return self.instrument.read_register(register)
-        except minimalmodbus.NoResponseError:
-            return self._read_register(register)
+        with self._lock:
+            try:
+                return self.instrument.read_register(register)
+            except minimalmodbus.NoResponseError:
+                return self._read_register(register)
 
     def _read_registers(self, start, length):
-        try:
-            return self.instrument.read_registers(start, length)
-        except minimalmodbus.NoResponseError:
-            return self._read_registers(start, length)
-        except minimalmodbus.InvalidResponseError:
-            return self._read_registers(start, length)
+        with self._lock:
+            try:
+                return self.instrument.read_registers(start, length)
+            except minimalmodbus.NoResponseError:
+                return self._read_registers(start, length)
+            except minimalmodbus.InvalidResponseError:
+                return self._read_registers(start, length)
 
     def _write_register(self, register, value):
-        try:
-            return self.instrument.write_register(register, value)
-        except minimalmodbus.NoResponseError:
-            return self._write_register(register, value)
+        with self._lock:
+            try:
+                return self.instrument.write_register(register, value)
+            except minimalmodbus.NoResponseError:
+                return self._write_register(register, value)
 
     def _mem(self, M=0):
         """reads the 4 register of a Memory[0-9] and print on a single line"""
