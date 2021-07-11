@@ -33,6 +33,7 @@ class RD6006:
             try:
                 return self.instrument.read_register(register)
             except minimalmodbus.NoResponseError:
+                print('read_register - mm.nre trying again')
                 return self._read_register(register)
 
     def _read_registers(self, start, length):
@@ -40,8 +41,10 @@ class RD6006:
             try:
                 return self.instrument.read_registers(start, length)
             except minimalmodbus.NoResponseError:
+                print('read_registers - mm.nre trying again')
                 return self._read_registers(start, length)
             except minimalmodbus.InvalidResponseError:
+                print('read_registers - mm.ire trying again')
                 return self._read_registers(start, length)
 
     def _write_register(self, register, value):
