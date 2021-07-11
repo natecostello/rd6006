@@ -29,30 +29,30 @@ class RD6006:
         return f"RD6006 SN:{self.sn} FW:{self.fw}"
 
     def _read_register(self, register):
-        with self._lock:
-            try:
+        try:
+            with self._lock:
                 return self.instrument.read_register(register)
-            except minimalmodbus.NoResponseError:
-                print('read_register - mm.nre trying again')
-                return self._read_register(register)
+        except minimalmodbus.NoResponseError:
+            print('read_register - mm.nre trying again')
+            return self._read_register(register)
 
     def _read_registers(self, start, length):
-        with self._lock:
-            try:
+        try:
+            with self._lock:       
                 return self.instrument.read_registers(start, length)
-            except minimalmodbus.NoResponseError:
-                print('read_registers - mm.nre trying again')
-                return self._read_registers(start, length)
-            except minimalmodbus.InvalidResponseError:
-                print('read_registers - mm.ire trying again')
-                return self._read_registers(start, length)
+        except minimalmodbus.NoResponseError:
+            print('read_registers - mm.nre trying again')
+            return self._read_registers(start, length)
+        except minimalmodbus.InvalidResponseError:
+            print('read_registers - mm.ire trying again')
+            return self._read_registers(start, length)
 
     def _write_register(self, register, value):
-        with self._lock:
-            try:
+        try:
+            with self._lock:
                 return self.instrument.write_register(register, value)
-            except minimalmodbus.NoResponseError:
-                return self._write_register(register, value)
+        except minimalmodbus.NoResponseError:
+            return self._write_register(register, value)
 
     def _mem(self, M=0):
         """reads the 4 register of a Memory[0-9] and print on a single line"""
