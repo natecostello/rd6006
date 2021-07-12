@@ -52,6 +52,7 @@ class RD6006:
             with self._lock:
                 return self.instrument.write_register(register, value)
         except minimalmodbus.NoResponseError:
+            print('write_register - mm.nre trying again')
             return self._write_register(register, value)
 
     def _mem(self, M=0):
